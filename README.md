@@ -18,9 +18,9 @@
 
 <br />
 
-    - FLASK_ENV=development
-    - SECRET_KEY=CHAVE_SECRETA_AQUI
-    - SQLALCHEMY_DATABASE_URI=sqlite:///db.sqlite3
+FLASK_ENV=development
+SECRET_KEY=CHAVE_SECRETA_AQUI
+SQLALCHEMY_DATABASE_URI=sqlite:///db.sqlite3
 
 <br />
 
