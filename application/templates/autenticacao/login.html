@@ -1,0 +1,43 @@
+{% extends 'includes/base.html' %}
+{% block conteudo %}
+{% block title %} Login {% endblock %}
+
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-lg-3 col-md-3 col-sm-12"></div>
+
+        <div class="col-lg-6 col-md-6 col-sm-12 bloco">
+
+            {{ mostra_flashes() }}
+
+            <h1 class="h1">Efetue o login</h1>
+            <form action="{{ url_for('login') }}" method="POST" class="form-group">
+
+                {{ form.csrf_token }}
+
+                <div class="form-group">
+                    {{ form.email(class_='form-control', placeholder='Email') }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.senha(class_='form-control', placeholder='Senha') }}
+                </div>
+
+                    {{ mostra_erros(form) }}
+
+                <div class="form-group">
+                    {{ form.entrar(class_='btn btn-block btn-dark botao') }}
+                    <a href="{{url_for('registro')}}" class="btn btn-block btn-dark  botao link">Cadastre-se</a>
+                </div>
+
+
+            </form>
+        </div>
+
+        <div class="col-lg-3 col-md-3 col-sm-12"></div>
+    </div>
+</div>
+
+{% endblock %}

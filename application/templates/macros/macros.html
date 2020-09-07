@@ -1,0 +1,27 @@
+
+{% macro mostra_erros(form) %}
+{% for campo, erros in form.errors.items() %}
+ <div class="alert alert-danger" role="alert">
+   {{ form[campo].label }} : {{''.join(erros)}}</h5>
+ </div>
+{% endfor %}
+{% endmacro %}
+
+
+{% macro mostra_flashes() %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            {% if category == 'error' %}
+                <div class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div>
+            {% else %}
+                <div class="alert alert-success" role="alert">
+                    {{ message }}
+                </div>
+            {% endif %}
+        {% endfor %}}
+    {% endif %}
+{% endwith %}
+{% endmacro %}
