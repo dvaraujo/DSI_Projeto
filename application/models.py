@@ -9,7 +9,7 @@ class Usuario(UserMixin, db.Model):
     usuario = db.Column(db.String(50), nullable=False, unique=True)
     email = db.Column(db.String(50), nullable=False, unique=True)
     senha = db.Column(db.String(200), nullable=False)
-    criado_em = db.Column(db.String,default=datetime.now(), nullable=True)
+    criado_em = db.Column(db.DATETIME, default=datetime.now(), nullable=True)
 
     def set_senha(self, senha):
         self.senha = generate_password_hash(senha, method='sha256')
