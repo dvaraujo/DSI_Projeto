@@ -26,4 +26,6 @@
 ```
 <br />
 
+3. Faça as migrações usando `flask db upgrade`
+
 4. Inicie a aplicação, usando `flask run`
