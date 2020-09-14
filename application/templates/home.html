@@ -1,13 +1,13 @@
 {% extends 'includes/base.html' %}
-{% block conteudo %}
 {% block title %} Home {% endblock %}
+{% block conteudo %}
 <div class="container">
     <div class="jumbotron">
         <h1 class="display-4">Bem vindo, {{current_user.usuario}}!</h1>
             <hr>
 
         <table class="table table-hover">
-          <caption>* Usuário logado</caption>
+          {{ mostra_flashes() }}
           <thead>
             <tr>
               <th colspan="3" class="text-center">Usuários cadastrados</th>
@@ -16,21 +16,18 @@
               <th scope="col">ID</th>
               <th scope="col">Usuário</th>
               <th scope="col">Email</th>
+
             </tr>
           </thead>
 
           <tbody>
             {% for usuario in usuarios %}
             <tr>
-                {% if usuario.id == current_user.id %}
-                    <th scope="row">{{usuario.id}}*</th>
-                    <td>{{usuario.usuario}}</td>
-                    <td>{{usuario.email}}</td>
-                {% else %}
-                    <th scope="row">{{usuario.id}}</th>
-                    <td>{{usuario.usuario}}</td>
-                    <td>{{usuario.email}}</td>
-                {% endif %}
+                  <th scope="row">{{usuario.id}}</th>
+                  <td>{{usuario.usuario}}</td>
+                  <td>{{usuario.email}}</td>
+                  <td><a  class="stretched-link" href="{{ url_for('usuario', usuario_id=usuario.id) }}"></a></td>
+
             </tr>
             {% endfor %}
           </tbody>

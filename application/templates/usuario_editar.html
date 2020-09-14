@@ -1,0 +1,40 @@
+{% extends 'includes/base.html' %}
+{% block title %} Editar {% endblock %}
+{% block conteudo %}
+<div class="container">
+  <div class="jumbotron">
+
+
+
+          <h1 class="display-4-sm">Alterando usuario: {{ usuario.usuario }}</h1>
+
+          <hr>
+          <form action="{{ url_for('usuario_editar', usuario_id=usuario.id) }}" method="POST" class="form-group">
+              {{ form.csrf_token }}
+              <div class="form-group">
+                  {{ form.usuario(class_='form-control', placeholder='Usuário') }}
+              </div>
+
+              <div class="form-group">
+                  {{ form.email(class_='form-control', placeholder='Email') }}
+              </div>
+
+              <div class="form-group">
+                  {{ form.senha(class_='form-control', placeholder='Senha') }}
+              </div>
+
+              <div class="form-group">
+                  {{ form.confirmar_senha(class_='form-control', placeholder='Confirmação de senha') }}
+              </div>
+
+                  {{ mostra_erros(form) }}
+
+              <div class="form-group">
+                  {{ form.registrar(class_='btn btn-block btn-dark botao', label="Atualizar") }}
+
+              </div>
+
+          </form>
+      </div>
+      </div>
+{% endblock %}
