@@ -1,9 +1,7 @@
-{% extends 'includes/base.html' %}
-{% block title %} Login {% endblock %}
-{% block conteudo %}
+{% extends 'includes/base.html' %} {% block title %} Login {% endblock %} {% block conteudo %}
 
 <div class="container">
-
+    <!--
     <div class="row">
 
         <div class="col-lg-3 col-md-3 col-sm-12"></div>
@@ -12,7 +10,7 @@
 
             {{ mostra_flashes() }}
 
-            <h1 class="h1">Efetue o login</h1>
+            <h1 class="titulo">Login de usuário </h1>
             <form action="{{ url_for('login') }}" method="POST" class="form-group">
 
                 {{ form.csrf_token }}
@@ -25,19 +23,115 @@
                     {{ form.senha(class_='form-control', placeholder='Senha') }}
                 </div>
 
-                    {{ mostra_erros(form) }}
+                {{ mostra_erros(form) }} {{ form.entrar(class_='btn btn-block btn-dark botao') }}
+                <hr>
 
-                <div class="form-group">
-                    {{ form.entrar(class_='btn btn-block btn-dark botao') }}
-                    <a href="{{url_for('registro')}}" class="btn btn-block btn-dark  botao link">Cadastre-se</a>
+                <div class="col mb-4">
+                    <div class="card botao">
+                        <a href="{{url_for('registro')}}" class="btn btn-block btn-dark botao link btn-lg">Cadastre-se</a>
+                    </div>
                 </div>
 
-
             </form>
+
         </div>
 
-        <div class="col-lg-3 col-md-3 col-sm-12"></div>
+   
+    <div class="col-lg-3 col-md-3 col-sm-12">
+        {{ mostra_flashes() }}
+
+        <h1 class="titulo">Login de Escritórios </h1>
+        <form action="{{ url_for('login') }}" method="POST" class="form-group">
+
+            {{ form.csrf_token }}
+
+            <div class="form-group">
+                {{ form.email(class_='form-control', placeholder='Email') }}
+            </div>
+
+            <div class="form-group">
+                {{ form.senha(class_='form-control', placeholder='Senha') }}
+            </div>
+
+            {{ mostra_erros(form) }} {{ form.entrar(class_='btn btn-block btn-dark botao') }}
+            <hr>
+            <div class="row row-cols-1 row-cols-md-2">
+                <div class="col mb-4">
+                    <div class="card botao">
+                        <a href="{{url_for('registro_escritorio')}}" class="btn btn-block btn-dark  botao link btn-lg">Cadastre-se</a>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+    </div>
+    -->
+
+    <!-- Layout esquema de cards-->
+
+    <div class="row row-cols-1 row-cols-md-2">
+        <div class="col mb-4">
+            <div class="card bloco">
+
+                <div class="card-body">
+                    <h1 class="card-title titulo">Login de <br> Usuário</h1>
+                    <form action="{{ url_for('login') }}" method="POST" class="form-group">
+
+                        {{ form.csrf_token }}
+
+                        <div class="form-group">
+                            {{ form.email(class_='form-control', placeholder='Email') }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.senha(class_='form-control', placeholder='Senha') }}
+                        </div>
+
+                        {{ mostra_erros(form) }} {{ form.entrar(class_='btn btn-block btn-dark botao') }}
+                        <hr>
+
+                        <div class="col mb-4">
+                            <div class="card botao">
+                                <a href="{{url_for('registro')}}" class="btn btn-block btn-dark botao link btn-lg">Cadastre-se</a>
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <div class="col mb-4">
+            <div class="card bloco">
+                <div class="card-body">
+                    <h1 class="card-title titulo">Login de <br> Escritórios</h1>
+
+                    <form action="{{ url_for('login') }}" method="POST" class="form-group">
+
+                        {{ form.csrf_token }}
+
+                        <div class="form-group">
+                            {{ form.email(class_='form-control', placeholder='Email') }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.senha(class_='form-control', placeholder='Senha') }}
+                        </div>
+
+                        {{ mostra_erros(form) }} {{ form.entrar(class_='btn btn-block btn-dark botao') }}
+                        <hr>
+                        <div class="col mb-4">
+                            <div class="card botao">
+                                <a href="{{url_for('registro_escritorio')}}" class="btn btn-block btn-dark  botao link btn-lg">Cadastre-se</a>
+                            </div>
+                        </div>
+
+                </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
-
 {% endblock %}

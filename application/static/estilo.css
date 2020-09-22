@@ -1,17 +1,21 @@
-body{
-        background: #331F20;
-    }
-.bloco{
-    border:1px solid black;
+body {
+    background: #331F20;
+}
+
+.bloco {
+    border: 1px solid black;
     border-radius: 4%;
-    background: rgba(0,0,0,0.5);
-    margin-top:20%;
-    padding:3%;
+    background: rgba(0, 0, 0, 0.5);
+    margin-top: 20%;
+    padding: 3%;
 }
-.h1{
-    margin-bottom:5% ;
-    color:white;
+
+.titulo {
+    margin-bottom: 5%;
+    color: white;
+    text-align: center;
 }
-.botao{
- background: rgba(0,0,0,0.5);
+
+.botao {
+    background: rgba(0, 0, 0, 0.5);
 }

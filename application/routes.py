@@ -1,8 +1,8 @@
 from flask import request, render_template, redirect, url_for, flash
 from flask import current_app as app
 from flask_login import login_required, login_user, logout_user, current_user
-from .models import Usuario
-from .forms import CadastroForm, LoginForm
+from .models import Usuario, Escritorio
+from .forms import PessoaForm, LoginForm, EscritorioForm
 from . import db
 from . import login_manager
 
@@ -50,10 +50,41 @@ def login():
     return render_template("autenticacao/login.html", form=form)
 
 
+@app.route("/registro_escritorio", methods=["POST", "GET"])
+def registro_escritorio():
+
+    form = EscritorioForm()
+  
+
+    # Se for POST
+    if form.validate_on_submit():       
+        cnpj_existe = Escritorio.query.filter_by(cpnj=form.cnpj.data).first()
+        oab_existe = Escritorio.query.filter_by(n_oab=form.n_oab.data).first()
+
+        if cnpj_existe is None and oab_existe is None:
+            escritorio = Escritorio(
+                razao_social=form.razao_social.data,
+                cnpj = form.cnpj.data,
+                n_oab = form.n_oab.data,               
+                email=form.email.data,
+            )
+
+            escritorio.set_senha(form.senha.data)
+            db.session.add(escritorio)            
+            db.session.commit()
+            flash("Seu escritório foi cadastrado com sucesso", category="message")
+            return redirect("escritorio")
+        flash("CNPJ ou Número OAB já cadastrados ☹", category="error")
+
+    # Se for GET
+    return render_template("autenticacao/registro_escritorio.html", form=form)
+
+
+
 @app.route("/registro", methods=["POST", "GET"])
 def registro():
-
-    form = CadastroForm()
+    form = PessoaForm()
+    
 
     # Se for POST
     if form.validate_on_submit():
@@ -119,3 +150,7 @@ def usuario_excluir(usuario_id):
     db.session.commit()
     flash("Usuário excluído", category="message")
     return redirect("/home")
+
+
+
+

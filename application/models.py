@@ -16,3 +16,13 @@ class Usuario(UserMixin, db.Model):
 
     def verifica_senha(self, senha):
         return check_password_hash(self.senha, senha)
+
+class Escritorio(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    razao_social = db.Column(db.String(250), nullable=False, unique=True)
+    cnpj = db.Column(db.String(14), nullable=False, unique=True)
+    n_oab = db.Column(db.String(8), nullable=False, unique=True)
+    #area = db.Column(db.String(250), nullable=False, unique=False)
+    email = db.Column(db.String(50), nullable=False, unique=True)
+    senha = db.Column(db.String(200), nullable=False)
+    criado_em = db.Column(db.DATETIME, default=datetime.now(), nullable=True)
