@@ -58,7 +58,7 @@ def registro_escritorio():
 
     # Se for POST
     if form.validate_on_submit():       
-        cnpj_existe = Escritorio.query.filter_by(cpnj=form.cnpj.data).first()
+        cnpj_existe = Escritorio.query.filter_by(cnpj=form.cnpj.data).first()
         oab_existe = Escritorio.query.filter_by(n_oab=form.n_oab.data).first()
 
         if cnpj_existe is None and oab_existe is None:
@@ -73,7 +73,7 @@ def registro_escritorio():
             db.session.add(escritorio)            
             db.session.commit()
             flash("Seu escritório foi cadastrado com sucesso", category="message")
-            return redirect("escritorio")
+            return redirect("login")
         flash("CNPJ ou Número OAB já cadastrados ☹", category="error")
 
     # Se for GET

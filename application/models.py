@@ -25,3 +25,9 @@ class Escritorio(UserMixin, db.Model):
     email = db.Column(db.String(50), nullable=False, unique=True)
     senha = db.Column(db.String(200), nullable=False)
     criado_em = db.Column(db.DATETIME, default=datetime.now(), nullable=True)
+
+    def set_senha(self, senha):
+        self.senha = generate_password_hash(senha, method='sha256')
+
+    def verifica_senha(self, senha):
+        return check_password_hash(self.senha, senha)
