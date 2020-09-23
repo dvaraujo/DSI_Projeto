@@ -28,6 +28,15 @@ def home():
 
     return render_template("home.html", usuarios=usuarios)
 
+
+@app.route("/escritorio")
+@login_required
+def home_escritorio():
+
+    usuarios = Escritorio.query.all()
+
+    return render_template("escritorio.html", usuarios=usuarios)
+
 @app.route("/")
 @app.route("/login", methods=["POST", "GET"])
 def login():
@@ -44,6 +53,26 @@ def login():
             login_user(usuario)
             next_page = request.args.get("next")
             return redirect(next_page or "home")
+        flash("Combinação de usuário e senha incorreta ☹", category="error")
+
+    # Se for GET
+    return render_template("autenticacao/login.html", form=form)
+
+@app.route("/login_escritorio", methods=["POST", "GET"])
+def login_escritorio():
+    
+    # Se for POST
+    if current_user.is_authenticated:
+        return redirect("escritorio")
+
+    form = LoginForm()
+
+    if form.validate_on_submit():
+        usuario = Escritorio.query.filter_by(email=form.email.data).first()
+        if usuario and usuario.verifica_senha(senha=form.senha.data):
+            login_user(usuario)
+            next_page = request.args.get("next")
+            return redirect(next_page or "escritorio")
         flash("Combinação de usuário e senha incorreta ☹", category="error")
 
     # Se for GET
@@ -108,7 +137,7 @@ def registro():
 
 
 @app.route("/logout", methods=["GET"])
-@login_required
+#@login_required
 def logout():
     logout_user()
     return redirect("/login")

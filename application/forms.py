@@ -28,10 +28,7 @@ class LoginForm(FlaskForm):
     entrar = SubmitField('Entrar')
 
 
-
-
-
-
-
-
-
+class CasoForm(FlaskForm):
+   nome = StringField('Nome', validators=[input_required(message="Campo obrigatório")])   
+   caso = TextAreaField('Descrição do caso',validators=[input_required(message="Campo obrigatório"), Length(max= 1000)])
+   enviar = SubmitField('Enviar')

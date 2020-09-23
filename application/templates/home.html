@@ -1,43 +1,43 @@
-{% extends 'includes/base.html' %}
-{% block title %} Home {% endblock %}
-{% block conteudo %}
+{% extends 'includes/base.html' %} {% block title %} Home {% endblock %} {% block conteudo %}
 <div class="container">
     <div class="jumbotron">
         <h1 class="display-4">Bem vindo, {{current_user.usuario}}!</h1>
-            <hr>
+        <hr>
 
         <table class="table table-hover">
-          {{ mostra_flashes() }}
-          <thead>
-            <tr>
-              <th colspan="3" class="text-center">Usuários cadastrados</th>
-            </tr>
-            <tr>
-              <th scope="col">ID</th>
-              <th scope="col">Usuário</th>
-              <th scope="col">Email</th>
+            {{ mostra_flashes() }}
+            <thead>
+                <tr>
+                    <th colspan="3" class="text-center">Usuários cadastrados</th>
+                </tr>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Usuário</th>
+                    <th scope="col">Email</th>
 
-            </tr>
-          </thead>
+                </tr>
+            </thead>
 
-          <tbody>
-            {% for usuario in usuarios %}
-            <tr>
-                  <th scope="row">{{usuario.id}}</th>
-                  <td>{{usuario.usuario}}</td>
-                  <td>{{usuario.email}}</td>
-                  <td><a  class="stretched-link" href="{{ url_for('usuario', usuario_id=usuario.id) }}"></a></td>
+            <tbody>
+                {% for usuario in usuarios %}
+                <tr>
+                    <th scope="row">{{usuario.id}}</th>
+                    <td>{{usuario.usuario}}</td>
+                    <td>{{usuario.email}}</td>
+                    <td>
+                        <a class="btn btn-primary" href="{{ url_for('usuario', usuario_id=usuario.id) }}">Visualizar</a>
+                    </td>
 
-            </tr>
-            {% endfor %}
-          </tbody>
+                </tr>
+                {% endfor %}
+            </tbody>
 
         </table>
 
         <hr class="my-4">
         <p class="lead">
-          <a class="btn btn-primary btn-lg" href="{{url_for('logout')}}" role="button">Logout</a>
+            <a class="btn btn-primary btn-lg" href="{{url_for('logout')}}" role="button">Logout</a>
         </p>
-      </div>
+    </div>
 </div>
 {% endblock %}

@@ -31,3 +31,9 @@ class Escritorio(UserMixin, db.Model):
 
     def verifica_senha(self, senha):
         return check_password_hash(self.senha, senha)
+
+class Caso(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    nome = db.Column(db.String(250), nullable=False, unique=False)
+    cpf = db.Column(db.String(11), nullable=False, unique=False) 
+    descricao = db.Column(db.String(1000), nullable=False, unique=False)

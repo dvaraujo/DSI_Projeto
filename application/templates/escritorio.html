@@ -1,1 +1,46 @@
-PAGINA DO ESCRITÓRIO
+{% extends 'includes/base.html' %} {% block title %} Home {% endblock %} {% block conteudo %}
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="display-4">Bem vindo, {{current_user.usuario}}!</h1>
+        <hr>
+
+        <table class="table table-hover">
+            {{ mostra_flashes() }}
+            <thead>
+                <tr>
+                    <th colspan="3" class="text-center">Escritórios cadastrados</th>
+                </tr>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Usuário</th>
+                    <th scope="col">CNPJ</th>
+                    <th scope="col">Número OAB</th>
+
+
+
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for usuario in usuarios %}
+                <tr>
+                    <th scope="row">{{usuario.id}}</th>
+                    <td>{{usuario.razao_social}}</td>
+                    <td>{{usuario.cnpj}}</td>
+                    <td>{{usuario.n_oab}}</td>
+
+
+
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+
+        <hr class="my-4">
+        <p class="lead">
+            <a class="btn btn-primary btn-lg" href="{{url_for('logout')}}" role="button">Logout</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
