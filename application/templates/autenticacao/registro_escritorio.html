@@ -7,7 +7,7 @@
             {{ mostra_flashes() }}
 
             <h1 class="titulo">Cadastrar Escritório</h1>
-            <form action="{{ url_for('registro') }}" method="POST" class="form-group">
+            <form action="{{ url_for('registro_escritorio') }}" method="POST" class="form-group">
                 {{ form.csrf_token }}
                 <div class="form-group">
                     {{ form.razao_social(class_='form-control', placeholder='Razão Social') }}
