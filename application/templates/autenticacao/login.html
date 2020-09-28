@@ -4,40 +4,70 @@
 
 <div class="container">
 
-    <div class="row">
+    <div class="row row-cols-1 row-cols-md-2">
+        <div class="col mb-4">
+            <div class="card bloco">
 
-        <div class="col-lg-3 col-md-3 col-sm-12"></div>
+                <div class="card-body">
+                    <h1 class="card-title titulo">Login de <br> Usuário</h1>
+                    <form action="{{ url_for('login') }}" method="POST" class="form-group">
 
-        <div class="col-lg-6 col-md-6 col-sm-12 bloco">
+                        {{ form.csrf_token }}
 
-            {{ mostra_flashes() }}
+                        <div class="form-group">
+                            {{ form.email(class_='form-control', placeholder='Email') }}
+                        </div>
+                        
+                        <div class="form-group">
+                            {{ form.senha(class_='form-control', placeholder='Senha') }}
+                        </div>
+                        
+                        {{ mostra_erros(form) }} {{ form.entrar(class_='btn btn-block btn-dark botao') }}
+                        <hr>
+                        
+                        <div class="col mb-4">
+                            <div class="card botao">
+                                <a href="{{url_for('registro')}}" class="btn btn-block btn-dark botao link btn-lg">Cadastre-se</a>
+                                <a href="{{ url_for('login_google') }}" class="btn btn-block btn-dark botao"><img src="https://img.icons8.com/color/16/000000/google-logo.png"><span> </span>Entrar com o Google</a>
+                            </div>
+                        </div>
 
-            <h1 class="h1">Efetue o login</h1>
-            <form action="{{ url_for('login') }}" method="POST" class="form-group">
+                    </form>
 
-                {{ form.csrf_token }}
-
-                <div class="form-group">
-                    {{ form.email(class_='form-control', placeholder='Email') }}
                 </div>
-
-                <div class="form-group">
-                    {{ form.senha(class_='form-control', placeholder='Senha') }}
-                </div>
-
-                    {{ mostra_erros(form) }}
-
-                <div class="form-group">
-                    {{ form.entrar(class_='btn btn-block btn-dark botao') }}
-                    <a href="{{url_for('registro')}}" class="btn btn-block btn-dark  botao link">Cadastre-se</a>
-                </div>
-
-
-            </form>
+            </div>
         </div>
+        <div class="col mb-4">
+            <div class="card bloco">
+                <div class="card-body">
+                    <h1 class="card-title titulo">Login de <br> Escritórios</h1>
+                    
+                    <form action="{{ url_for('login_escritorio') }}" method="POST" class="form-group">
 
-        <div class="col-lg-3 col-md-3 col-sm-12"></div>
+                        {{ form.csrf_token }}
+
+                        <div class="form-group">
+                            {{ form.email(class_='form-control', placeholder='Email') }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.senha(class_='form-control', placeholder='Senha') }}
+                        </div>
+
+                        {{ mostra_erros(form) }} {{ form.entrar(class_='btn btn-block btn-dark botao') }}
+                        <hr>
+                        <div class="col mb-4">
+                            <div class="card botao">
+                                <a href="{{url_for('registro_escritorio')}}" class="btn btn-block btn-dark  botao link btn-lg">Cadastre-se</a>
+                            </div>
+                        </div>
+
+                </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
+        
 
 {% endblock %}

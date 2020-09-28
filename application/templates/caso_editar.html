@@ -1,0 +1,36 @@
+{% extends 'includes/base.html' %}
+{% block title %} Editar {% endblock %}
+{% block conteudo %}
+<div class="container">
+  <div class="jumbotron">
+
+
+
+          <h1 class="display-4-sm">Alterando caso: {{ caso.nome }}</h1>
+
+          <hr>
+          <form action="{{ url_for('caso_editar', caso_id=caso.id) }}" method="POST" class="form-group">
+              {{ form.csrf_token }}
+              <div class="form-group">
+                  {{ form.nome(class_='form-control', placeholder='Nome') }}
+              </div>
+
+              <div class="form-group">
+                  {{ form.cpf(class_='form-control', placeholder='CPF') }}
+              </div>
+
+              <div class="form-group">
+                  {{ form.descricao(class_='form-control', placeholder='Descrição') }}
+              </div>
+
+                  {{ mostra_erros(form) }}
+
+              <div class="form-group">
+                  {{ form.enviar(class_='btn btn-block btn-dark botao', label="Atualizar") }}
+
+              </div>
+
+          </form>
+      </div>
+      </div>
+{% endblock %}

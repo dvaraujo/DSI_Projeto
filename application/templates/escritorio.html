@@ -3,21 +3,23 @@
 {% block conteudo %}
 <div class="container">
     <div class="jumbotron">
-        <h1 class="display-4">Bem vindo, {{current_user.usuario}}!</h1>
+        <h1 class="display-4">Casos cadastrados</h1>
             <hr>
 
         <table class="table table-hover">
           {{ mostra_flashes() }}
           <thead>
             <tr>
-              <th colspan="3" class="text-center">Meus casos</th>
+              <th colspan="3" class="text-center">Casos cadastrados</th>
             </tr>
             <tr>
-              <th scope="col">ID</th>
-              <th scope="col">Nome</th>
+              <th scope="col">ID do caso</th>
+              <th scope="col">Solicitante</th>
               <th scope="col">CPF</th>
+              <th scope="col">Nome do Caso</th>
               <th scope="col">Descrição</th>
               <th scope="col">Escritório</th>
+
 
             </tr>
           </thead>
@@ -26,8 +28,9 @@
             {% for caso in casos %}
             <tr>
                   <th scope="row">{{caso.id}}</th>
-                  <th scope="row">{{caso.nome}}</th>
+                  <th scope="row">{{caso.usuario.usuario}}</th>
                   <td>{{caso.cpf}}</td>
+                  <th scope="row">{{caso.nome}}</th>
                   <td>{{caso.descricao}}</td>
                   <td>{{caso.escritorio}}</td>
                   <td>
@@ -42,13 +45,12 @@
         </table>
 
         <hr class="my-4">
+
         <p class="lead">
-          <a class="btn btn-primary btn-lg" href="{{url_for('caso_adicionar')}}" role="button">Adicionar caso</a>
+        <p class="lead">
+          <a class="btn btn-primary btn-lg" href="{{url_for('escritorio_perfil', escritorio_id=escritorio.id)}}" role="button">Meu Perfil</a>
         </p>
-        <p class="lead">
-          <a class="btn btn-primary btn-lg" href="{{url_for('usuario', usuario_id=usuario.id)}}" role="button">Meu Perfil</a>
-        </p>
-        <p class="lead">
+
           <a class="btn btn-primary btn-lg" href="{{url_for('logout')}}" role="button">Logout</a>
         </p>
       </div>

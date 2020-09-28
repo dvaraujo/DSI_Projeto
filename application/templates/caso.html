@@ -1,0 +1,67 @@
+{% extends 'includes/base.html' %}
+{% block title %} Visualizar {% endblock %}
+{% block conteudo %}
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="display-4">Usuário logado:  {{current_user.usuario}}!</h1>
+            <hr>
+            {{ mostra_flashes() }}
+        <table class="table table-hover">
+            
+          <thead>
+            <tr>
+              <th colspan="3" class="text-center">Dados do caso selecionado</th>
+            </tr>
+            <tr>
+              <th scope="col">nome</th>
+              <th scope="col">CPF</th>
+              <th scope="col">Descrição</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+                <th scope="row">{{caso.id}}</th>
+                <td>{{caso.nome}}</td>
+                <td>{{caso.descricao}}</td>
+                
+                <td>
+                    
+                    <a class="btn btn-primary" href="{{ url_for('caso_editar', caso_id=caso.id) }}">Alterar</a>
+                    
+                </td>
+                
+                <td>
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exclusaoModal">Excluir</button>
+                </td>
+            </tr>
+          </tbody>
+
+        </table>
+
+        <hr class="my-4">
+        <p class="lead">
+          <a class="btn btn-primary btn-lg" href="{{url_for('home')}}" role="button">Voltar</a>
+          
+          <a class="btn btn-primary btn-lg" href="{{url_for('logout')}}" role="button">Logout</a>        </p>
+      </div>
+</div>
+<div class="modal fade" id="exclusaoModal" tabindex="-1" aria-labelledby="exclusaoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exclusaoModalLabel">Confirma a exclusão do Usuário {{ caso.nome }}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+          <form action="{{ url_for('caso_excluir', caso_id=caso.id) }}" method="POST">
+            <button type="submit" class="btn btn-danger" value="Excluir">Excluir</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

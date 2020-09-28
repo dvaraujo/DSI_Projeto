@@ -23,6 +23,9 @@
  FLASK_ENV=development
  SECRET_KEY=CHAVE_SECRETA_AQUI
  SQLALCHEMY_DATABASE_URI=sqlite:///db.sqlite3
+ GOOGLE_CLIENT_ID=ID_GOOGLE
+ GOOGLE_CLIENT_SECRET=SECRET_GOOGLE
+ GOOGLE_DISCOVERY_URL=https://accounts.google.com/.well-known/openid-configuration
 ```
 <br />
 
