@@ -41,3 +41,8 @@ class Caso(db.Model):
     descricao = db.Column(db.String(1000), nullable=False, unique=False)
     escritorio_id = db.Column(db.Integer, db.ForeignKey('escritorio.id'))
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
+    
+class Pesquisa(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    nome_site = db.Column(db.String(50), nullable=False, unique=False)
+    atalho = db.Column(db.String(50), nullable=False, unique=False)

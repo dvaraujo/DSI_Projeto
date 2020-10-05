@@ -41,3 +41,10 @@ class CasoForm(FlaskForm):
    cpf = StringField('CPF', validators=[input_required(message="Informe apenas os números do CPF"), Length(min = 11, max = 11, message = "O CPF deve conter 11 caracteres")])
    descricao = TextAreaField('Descrição do caso',validators=[input_required(message="Campo obrigatório"), Length(max= 1000)])
    enviar = SubmitField('Enviar')
+   
+   
+class PesquisaForm(FlaskForm):
+    nome_site = SelectField('Site', choices=[])
+    texto_pesquisa = StringField('Pesquisar', validators=[input_required(message="Digite um termo para efetuar a procura")])
+    pesquisar = SubmitField('Pesquisar')
+    

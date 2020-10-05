@@ -2,8 +2,8 @@ from flask import request, render_template, redirect, url_for, flash
 import requests
 from flask import current_app as app
 from flask_login import login_required, login_user, logout_user, current_user
-from .models import Usuario, Escritorio, Caso
-from .forms import CadastroForm, CasoForm, LoginForm, EscritorioForm, PessoaForm
+from .models import Usuario, Escritorio, Caso, Pesquisa
+from .forms import CadastroForm, CasoForm, LoginForm, EscritorioForm, PesquisaForm, PessoaForm, PesquisaForm
 from . import db
 from . import login_manager
 from oauthlib.oauth2 import WebApplicationClient
@@ -35,14 +35,24 @@ def unauthorized():
     return redirect("login")
 
 
-@app.route("/home")
+@app.route("/home", methods=['POST','GET'])
 @login_required
 def home():
+    if request.method == 'GET':
+        form = PesquisaForm()
+        form.nome_site.choices = [(pesquisa.nome_site) for pesquisa in Pesquisa.query.order_by(Pesquisa.nome_site.asc()).all()]
+        usuario = current_user
+        casos = usuario.casos
+        return render_template("home.html", casos=casos, usuario=usuario, form=form)
+    else:
+        nome_site_escolhido = request.form.get('nome_site') # Site escolhido no Dropdown
+        texto_pesquisa = request.form.get('texto_pesquisa') # Termo escolhido na pesquisa
+        site_pesquisa = Pesquisa.query.filter_by(nome_site=nome_site_escolhido).first().atalho # Pega o atalho !bang correspondente no banco de dados
+        response = requests.get(f"https://api.duckduckgo.com/?q={site_pesquisa}+{texto_pesquisa}&format=json&pretty=1&no_redirect=1").json()
+        url_pesquisa = response['Redirect']
+        return redirect(url_pesquisa)
 
-    usuario = current_user
-    casos = usuario.casos
-    return render_template("home.html", casos=casos, usuario=usuario)
-
+    
 
 @app.route("/escritorio")
 @login_required
@@ -85,9 +95,9 @@ def login_escritorio():
     form = LoginForm()
 
     if form.validate_on_submit():
-        usuario = Escritorio.query.filter_by(email=form.email.data).first()
-        if usuario and usuario.verifica_senha(senha=form.senha.data):
-            login_user(usuario)
+        escritorio = Escritorio.query.filter_by(email=form.email.data).first()
+        if escritorio and escritorio.verifica_senha(senha=form.senha.data):
+            login_user(escritorio)
             next_page = request.args.get("next")
             return redirect(next_page or "escritorio")
         flash("Combinação de usuário e senha incorreta ☹", category="error")
