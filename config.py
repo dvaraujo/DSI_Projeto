@@ -23,3 +23,7 @@ class Config:
     SQLALCHEMY_DATABASE_URI = environ.get("SQLALCHEMY_DATABASE_URI")
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    
+    # Stripe
+    STRIPE_PUBLIC_KEY = environ.get("STRIPE_PUBLIC_KEY")
+    STRIPE_SECRET_KEY = environ.get("STRIPE_SECRET_KEY")

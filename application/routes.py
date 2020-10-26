@@ -9,6 +9,13 @@ from . import login_manager
 from oauthlib.oauth2 import WebApplicationClient
 import json
 import os
+import stripe
+
+STRIPE_PUBLIC_KEY = app.config["STRIPE_PUBLIC_KEY"]
+STRIPE_SECRET_KEY = app.config["STRIPE_SECRET_KEY"]
+STRIPE_EVT_DIR = 'application/api/stripe/events'
+STRIPE_PAY_DIR = 'application/api/stripe/payments'
+stripe.api_key = STRIPE_SECRET_KEY
 
 
 GOOGLE_DISCOVERY_URL=os.environ.get("GOOGLE_DISCOVERY_URL")
@@ -38,12 +45,16 @@ def unauthorized():
 @app.route("/home", methods=['POST','GET'])
 @login_required
 def home():
+    # GET
     if request.method == 'GET':
         form = PesquisaForm()
         form.nome_site.choices = [(pesquisa.nome_site) for pesquisa in Pesquisa.query.order_by(Pesquisa.nome_site.asc()).all()]
+        # pesquisas = Pesquisa.query.all()
+        pesquisas = ['a', 'b', 'c']
         usuario = current_user
         casos = usuario.casos
-        return render_template("home.html", casos=casos, usuario=usuario, form=form)
+        return render_template("home.html", casos=casos, usuario=usuario, form=form, pesquisas=pesquisas)
+    # POST
     else:
         nome_site_escolhido = request.form.get('nome_site') # Site escolhido no Dropdown
         texto_pesquisa = request.form.get('texto_pesquisa') # Termo escolhido na pesquisa
@@ -52,7 +63,66 @@ def home():
         url_pesquisa = response['Redirect']
         return redirect(url_pesquisa)
 
-    
+
+@app.route('/stripe_pay')
+def stripe_pay():
+    session = stripe.checkout.Session.create(  # Cria uma sessão de checkout
+        payment_method_types=['card'],         # Método de pagamento
+        line_items=[{                          # Itens da compra
+            'price': 'price_1HZ4rNG1tHT0FqZft1sgCI8O', # ID do preço obtido no Stripe
+            'quantity': 1,                             # Quantidade de unidades do produto
+        }],
+        mode='payment',                                # Modo de pagamento. Payment = pagamento único. Subscription = pagamento recorrente
+        # line_items=[{
+        #     'price': 'price_1HZ4rNG1tHT0FqZfmLmRyOFY',
+        #     'quantity': 1,
+        # }],
+        # mode='subscription',        
+        success_url=url_for('home', _external=True) + '?session_id={CHECKOUT_SESSION_ID}', # URL de direcionamento caso sucesso
+        cancel_url=url_for('home', _external=True),                                        # URL de direcionamento caso cancelamento
+    )
+    return {
+        'checkout_session_id': session['id'],  # Retorna ID da sessão, será acessado via JS
+        'checkout_public_key': STRIPE_PUBLIC_KEY # Retorna a Public Key,  será acessado via JS
+    }
+
+@app.route('/stripe_webhook', methods=['POST'])
+def stripe_webhook():
+    # Informações necessárias para criar o evento
+    payload = request.get_data()
+    sig_header = request.environ.get('HTTP_STRIPE_SIGNATURE')
+    endpoint_secret = 'whsec_PhzIjoCzF2hTZnPx7I7MJKFK1kqM7qbL'
+    event = None
+
+    # Tenta criar o evento para pagamento e mostra os erros correspondentes, caso não consiga
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, endpoint_secret
+        )
+    except ValueError as e:
+        # Payload inválido
+        print('PAYLOAD INVÁLIDO')
+        return {}, 400
+    except stripe.error.SignatureVerificationError as e:
+        # Assinatura inválida
+        print(e, 'ASSINATURA INVÁLIDA')
+        return {}, 400
+
+    # Teste para ver se é o evento esperado. Neste caso, é o evento de uma sessão de compra concluída. 
+    if event['type'] == 'checkout.session.completed':
+        event_dic = event.to_dict() # Informações do evento 
+        session_id = event['data']['object']['id'] # Id da sessão
+        line_items = stripe.checkout.Session.list_line_items(session_id, limit=1) # Lista de itens comprados
+
+        json_para_arquivo(STRIPE_EVT_DIR, event_dic['id'], event.to_dict())
+        json_para_arquivo(STRIPE_PAY_DIR, line_items.data[0]['id'], dict(line_items))
+
+    return {}
+
+def json_para_arquivo(CAMINHO, NOME_ARQUIVO, JSON_ARQUIVO):
+    with open(f"{CAMINHO}/{NOME_ARQUIVO}.json", "w") as arquivo:
+        json.dump(JSON_ARQUIVO, arquivo)    
+
 
 @app.route("/escritorio")
 @login_required
