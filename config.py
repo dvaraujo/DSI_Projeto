@@ -27,3 +27,6 @@ class Config:
     # Stripe
     STRIPE_PUBLIC_KEY = environ.get("STRIPE_PUBLIC_KEY")
     STRIPE_SECRET_KEY = environ.get("STRIPE_SECRET_KEY")
+    
+    #Rapid Api
+    RAPID_API_KEY = environ.get("RAPID_API_KEY")

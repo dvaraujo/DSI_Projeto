@@ -11,6 +11,8 @@ import json
 import os
 import stripe
 
+
+RAPID_API_KEY = app.config['RAPID_API_KEY']
 STRIPE_PUBLIC_KEY = app.config["STRIPE_PUBLIC_KEY"]
 STRIPE_SECRET_KEY = app.config["STRIPE_SECRET_KEY"]
 STRIPE_EVT_DIR = 'application/api/stripe/events'
@@ -66,11 +68,15 @@ def home():
 
 @app.route('/stripe_pay')
 def stripe_pay():
+    print(request.args)
+    id_produto = int(request.args['id'])
+    qtd = int(request.args['qtd'])
+    price_id = {1:'price_1HZ4rNG1tHT0FqZft1sgCI8O', 2:'price_1HZ4rNG1tHT0FqZfmLmRyOFY'}
     session = stripe.checkout.Session.create(  # Cria uma sessão de checkout
         payment_method_types=['card'],         # Método de pagamento
         line_items=[{                          # Itens da compra
-            'price': 'price_1HZ4rNG1tHT0FqZft1sgCI8O', # ID do preço obtido no Stripe
-            'quantity': 1,                             # Quantidade de unidades do produto
+            'price': price_id[id_produto], # ID do preço obtido no Stripe
+            'quantity': qtd,                             # Quantidade de unidades do produto
         }],
         mode='payment',                                # Modo de pagamento. Payment = pagamento único. Subscription = pagamento recorrente
         # line_items=[{
@@ -119,9 +125,9 @@ def stripe_webhook():
 
     return {}
 
-def json_para_arquivo(CAMINHO, NOME_ARQUIVO, JSON_ARQUIVO):
-    with open(f"{CAMINHO}/{NOME_ARQUIVO}.json", "w") as arquivo:
-        json.dump(JSON_ARQUIVO, arquivo)    
+def json_para_arquivo(CAMINHO, nome_arquivo, json_arquivo):
+    with open(f"{CAMINHO}/{nome_arquivo}.json", "w") as arquivo:
+        json.dump(json_arquivo, arquivo)    
 
 
 @app.route("/escritorio")
@@ -180,30 +186,55 @@ def login_escritorio():
 def registro_escritorio():
 
     form = EscritorioForm()
-  
 
     # Se for POST
     if form.validate_on_submit():       
         cnpj_existe = Escritorio.query.filter_by(cnpj=form.cnpj.data).first()
         oab_existe = Escritorio.query.filter_by(n_oab=form.n_oab.data).first()
 
-        if cnpj_existe is None and oab_existe is None:
-            escritorio = Escritorio(
-                razao_social=form.razao_social.data,
-                cnpj = form.cnpj.data,
-                n_oab = form.n_oab.data,               
-                email=form.email.data,
-            )
+        if cnpj_existe and oab_existe:
+            flash("CNPJ ou Número OAB já cadastrados ☹", category="error")
+        else:
+            cnpj_resposta = valida_cnpj(form.cnpj.data)
+            if cnpj_resposta['msg_usuario'] == "CNPJ encontrado":
+                
+                escritorio = Escritorio(
+                    cnpj = form.cnpj.data,
+                    razao_social = cnpj_resposta['razao_social'],
+                    nome_fantasia = cnpj_resposta['nome_fantasia'],
+                    n_oab = form.n_oab.data,               
+                    email=form.email.data,
+                )
 
-            escritorio.set_senha(form.senha.data)
-            db.session.add(escritorio)            
-            db.session.commit()
-            flash("Seu escritório foi cadastrado com sucesso", category="message")
-            return redirect("login")
-        flash("CNPJ ou Número OAB já cadastrados ☹", category="error")
+                escritorio.set_senha(form.senha.data)
+                db.session.add(escritorio)            
+                db.session.commit()
+                flash("Seu escritório foi cadastrado com sucesso", category="message")
+                return redirect("login")
+
+            flash("CNPJ não encontrado!", category="error")
 
     # Se for GET
     return render_template("autenticacao/registro_escritorio.html", form=form)
+
+
+
+def valida_cnpj(cnpj):
+    headers = {
+    'x-rapidapi-key': RAPID_API_KEY,
+    'x-rapidapi-host': "consulta-cnpj-gratis.p.rapidapi.com"
+    }
+
+    response = requests.get(f"https://consulta-cnpj-gratis.p.rapidapi.com/companies/{cnpj}", headers=headers)
+    if response.status_code == 200:
+        razao_social = response.json()['name']
+        nome_fantasia = response.json()['alias']
+        resposta = {'razao_social': razao_social, 'nome_fantasia': nome_fantasia, 'msg_usuario':"CNPJ encontrado"}
+    else:
+        resposta = {'codigo_erro': response.status_code, 'msg_api': response.json()['message'], 'msg_usuario':"CNPJ não encontrado"}
+    return resposta
+
+
 
 
 @app.route("/login_google")

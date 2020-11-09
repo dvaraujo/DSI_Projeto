@@ -20,6 +20,7 @@ class Usuario(UserMixin, db.Model):
     
 class Escritorio(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    nome_fantasia = db.Column(db.String(250), nullable=False, unique=True)
     razao_social = db.Column(db.String(250), nullable=False, unique=True)
     cnpj = db.Column(db.String(14), nullable=False, unique=True)
     n_oab = db.Column(db.String(8), nullable=False, unique=True)   

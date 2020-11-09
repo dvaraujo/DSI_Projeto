@@ -27,7 +27,8 @@ class PessoaForm(FlaskForm):
 
 
 class EscritorioForm(FlaskForm):
-    razao_social = StringField('Razão Social', validators=[input_required(message="Campo obrigatório")])
+
+
     cnpj = StringField('CNPJ', validators=[input_required(message="Informe apenas os números do CNPJ"), Length(min = 14, max = 14, message = "O CNPJ deve conter 14 caracteres")])
     n_oab = StringField('Nº OAB', validators=[input_required(message="Informe nº OAB no formato UF123456"), Length(min = 8, max = 8, message = "Número inválido, use o formato formato UF123456")])     
     email = StringField('Email', validators=[Email(message="Insira um e-mail válido")])
